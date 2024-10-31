@@ -8,7 +8,7 @@ export default function DevicePage() {
   const params = useParams();
   const deviceId = params.id;
 
-  const { data: device, isLoading: isLoadingDevice, error: errorDevice } = useSWR<Device, Error>(`http://localhost:8081/devices/${deviceId}`, fetcher);
+  const { data: device, isLoading: isLoadingDevice, error: errorDevice } = useSWR<Device, Error>(`/api/devices/${deviceId}`, fetcher);
 
   if (errorDevice) return <div>failed to load</div>
   if (isLoadingDevice) return <div>loading...</div>

@@ -6,7 +6,7 @@ export default function DeviceList() {
   return (
     <List
       title="Devices"
-      apiUrl='http://localhost:8081/devices/'
+      apiUrl='/api/devices/'
       Item={Device}
       ItemComponent={({ data }) => <DeviceItem data={data as Device} />} // Ensure correct type casting
       linkItem={(device) => `/devices/${device.id}`}
