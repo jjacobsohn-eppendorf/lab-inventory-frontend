@@ -17,7 +17,6 @@ interface ListProps {
   ItemComponent: React.ComponentType<{
     data?: Item;
   }>;
-  idProperty: string;
   linkItem: (item: Item) => string;
 }
 
