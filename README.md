@@ -46,20 +46,20 @@ Challenge
 
 Your challenge is to complete two independent tasks:
 
-- [ ] Use the data in the provided data.json file to visualize a sortable table/list of entries
-- [ ] Create a simple registration form with the following requirements
-  - [ ] Name Input
-    - [ ] required
-    - [ ] at least 2 characters
-  - [ ] Email Input
-    - [ ] required
-    - [ ] imple email validation
-  - [ ] Password Input
-    - [ ] required
-    - [ ] at least 8 characters
-    - [ ] at least one uppercase letter
-    - [ ] at least one special character
-    - [ ] at least one number
+- [x] Use the data in the provided data.json file to visualize a sortable table/list of entries
+- [x] Create a simple registration form with the following requirements
+  - [x] Name Input
+    - [x] required
+    - [x] at least 2 characters
+  - [x] Email Input
+    - [x] required
+    - [x] simple email validation
+  - [x] Password Input
+    - [x] required
+    - [x] at least 8 characters
+    - [x] at least one uppercase letter
+    - [x] at least one special character
+    - [x] at least one number
 
 
 TODO

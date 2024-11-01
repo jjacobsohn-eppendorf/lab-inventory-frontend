@@ -1,7 +1,7 @@
 import { LinkContainer } from 'react-router-bootstrap'
 import Navbar from 'react-bootstrap/Navbar';
 import Logo from './Logo';
-import { Button } from 'react-bootstrap';
+import SignUpModal from './SignUpModal';
 
 function Header() {
   return (
@@ -14,7 +14,7 @@ function Header() {
           Lab Inventory Tracker
         </Navbar.Brand>
       </LinkContainer>
-      <Button variant='link' className='text-white ms-auto'>Login</Button>
+      <SignUpModal />
     </Navbar >
   );
 }
