@@ -1,7 +1,7 @@
 Lab Inventory UI
 ================
 
-This is a small project to display a list of lab devices. Data is fetched from a backend server.
+This is a small project to display a list of lab devices. Data is fetched from a [backend service](https://github.com/jjacobsohn-eppendorf/lab-inventory-backend)
 
 
 Getting started
@@ -32,7 +32,7 @@ Related projects
 
    This project
 
-- [Lab Inventory Backend](jjacobsohn-eppendorf/lab-inventory-backend)
+- [Lab Inventory Backend](https://github.com/jjacobsohn-eppendorf/lab-inventory-backend)
 
     The backend for this project.
   
