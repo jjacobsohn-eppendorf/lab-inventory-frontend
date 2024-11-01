@@ -16,11 +16,15 @@ export default function DevicePage() {
 
   return (
     <div>
-      <h2 className="fs-4">{device.id}</h2>
+      <h2 className="fs-4">{device.type} @ {device.location}</h2>
 
       <div className='table-responsive'>
         <table className='table table-striped table-hover'>
           <tbody>
+            <tr>
+              <th>Id</th>
+              <td>{device.id}</td>
+            </tr>
             <tr>
               <th>Location</th>
               <td>{device.location}</td>

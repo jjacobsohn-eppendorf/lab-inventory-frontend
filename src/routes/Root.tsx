@@ -10,11 +10,11 @@ export default function App() {
     <div id="app">
       {navigation.state === "loading" && <div>loading</div>}
       <Header />
-      <main className="row flex-column flex-md-row g-0">
+      <main className="row flex-column flex-md-row g-0 overflow-hidden">
         <div className="col-md-3 text-bg-dark">
           <MainNav />
         </div>
-        <div className="col-md-9">
+        <div className="col-md-9 h-100">
           <Outlet />
         </div>
       </main>

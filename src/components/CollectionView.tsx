@@ -1,26 +1,22 @@
 import useSWR from 'swr'
-import { Device } from './devices/Device';
-import { Link, Outlet, useOutlet } from 'react-router-dom';
+import { Outlet, useOutlet } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { FaLaptop as Laptop } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
+import { Device } from './devices/Device';
+import ListView from './ListView';
+import TableView from './TableView';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-type Item = Device;
 
 interface ListProps {
   title: string;
   apiUrl: string;
-  Item: new () => Item;
-  ItemComponent: React.ComponentType<{
-    data?: Item;
-  }>;
-  linkItem: (item: Item) => string;
+  linkItem: (item: Device) => string;
 }
 
-function compare(sortProperty: string, a: Item, b: Item) {
+function compare(sortProperty: string, a: Device, b: Device) {
   if (typeof a[sortProperty] == 'string' && typeof b[sortProperty] == 'string') {
     return a[sortProperty].localeCompare(b[sortProperty])
   } else if (typeof a[sortProperty] == 'number' && typeof b[sortProperty] == 'number') {
@@ -30,12 +26,15 @@ function compare(sortProperty: string, a: Item, b: Item) {
   return 0
 }
 
-const List: React.FC<ListProps> = ({ title, apiUrl, Item, ItemComponent, linkItem }) => {
+const List: React.FC<ListProps> = ({ title, apiUrl, linkItem }) => {
 
-  const { data, error, isLoading } = useSWR<Item[], Error>(apiUrl, fetcher)
+  const { data, error, isLoading } = useSWR<Device[], Error>(apiUrl, fetcher)
   const params = useParams();
   const id = params.id;
+
   const [sortProperty, setSortProperty] = useState('');
+  const [view, setView] = useState('list');
+
   const outlet = useOutlet()
 
   // use localstorage to save the sorting property.
@@ -47,13 +46,14 @@ const List: React.FC<ListProps> = ({ title, apiUrl, Item, ItemComponent, linkIte
       setSortProperty(savedSortProperty)
     }
   }, [title])
+
   useEffect(() => {
     localStorage.setItem(`${title}-sortProperty`, sortProperty)
   }, [sortProperty, title])
 
-  const [selection, setSelection] = useState<Item[]>([]);
+  const [selection, setSelection] = useState<Device[]>([]);
 
-  function toggleSelection(item: Item) {
+  function toggleSelection(item: Device) {
     if (selection.includes(item)) {
       setSelection(selection.filter(i => i !== item))
     } else {
@@ -69,16 +69,16 @@ const List: React.FC<ListProps> = ({ title, apiUrl, Item, ItemComponent, linkIte
     setSelection([])
   }
 
-  function row(item: Item) {
+  function row(item: Device) {
     return Object.values(item).join(';') // lets pray that there are no semicolons in the data
   }
 
-  function header(item: Item) {
+  function header(item: Device) {
     return Object.keys(item).join(';')
   }
 
   function handleExport() {
-    const blob = new Blob([header(new Item()), selection.map(item => row(item)).join('\n')], { type: 'text/csv' })
+    const blob = new Blob([header(new Device()), selection.map(item => row(item)).join('\n')], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -92,9 +92,11 @@ const List: React.FC<ListProps> = ({ title, apiUrl, Item, ItemComponent, linkIte
   if (error) return <div>failed to load</div>
   if (isLoading) return <div>loading...</div>
 
+  const ViewComponent = view === 'list' ? ListView : TableView
+
   return (
-    <div className="d-flex flex-nowrap">
-      <div className={`col p-3 bg-body-tertiary ${outlet ? "col-md-4 col-12 d-none d-md-block" : "col-12"}`}>
+    <div className="d-flex flex-nowrap h-100">
+      <div className={`col p-3 bg-body-tertiary d-md-flex flex-column ${outlet ? "col-md-4 col-12 d-none" : "col-12"} h-100`}>
         <div className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
           <Laptop size={24} className="me-2" />
           <h2 className="fs-4">{title}</h2>
@@ -103,27 +105,22 @@ const List: React.FC<ListProps> = ({ title, apiUrl, Item, ItemComponent, linkIte
           <Form.Check aria-label="Select all" onChange={e => e.target.checked ? selectAll() : deselectAll()} />
           <ButtonGroup size='sm' className='ml-2'>
             <Button disabled={!selection.length} title="Export selected items to cvs" variant="primary" onClick={handleExport}>Export</Button>
-
+            <Form.Select aria-label="View" size='sm' value={view} onChange={e => setView(e.target.value)}>
+              <option key="list" value="list">List</option>
+              <option key="table" value="table">Table</option>
+            </Form.Select>
             <Form.Select aria-label="Sort by" size='sm' value={sortProperty} onChange={e => setSortProperty(e.target.value)}>
               <option>SortBy</option>
-              {Object.keys(new Item()).map((key) => (
+              {Object.keys(new Device()).map((key) => (
                 <option key={key} value={key}>{key}</option>
               ))}
             </Form.Select>
           </ButtonGroup>
         </div>
         <hr />
-        <ul className="list-group">
-          {data?.sort((a, b) => compare(sortProperty, a, b)).map((item) => {
-            return (<li key={item.id} className='d-flex'>
-              <Form.Check type="checkbox" checked={selection.includes(item)} onChange={() => toggleSelection(item)} />
-              <Link to={linkItem(item)} className={`list-group-item list-group-item-action mb-1 mx-1 lh-sm ${id === item.id && 'active'}`} aria-current={id === item.id}>
-                <ItemComponent data={item} />
-              </Link>
-            </li>
-            )
-          })}
-        </ul>
+        <div className="h-100 overflow-scroll">
+          {data && <ViewComponent data={data} selection={selection} toggleSelection={toggleSelection} linkItem={linkItem} sortProperty={sortProperty} compare={compare} id={id} />}
+        </div>
       </div>
       {outlet && outlet && <div className="d-flex flex-column flex-grow-1 p-3 col-6">
         <Outlet />

@@ -1,14 +1,10 @@
-import { Device } from '../components/devices/Device';
-import DeviceItem from '../components/devices/DeviceItem';
-import List from '../components/List';
+import CollectionView from '../components/CollectionView';
 
 export default function DeviceList() {
   return (
-    <List
+    <CollectionView
       title="Devices"
       apiUrl='/api/devices/'
-      Item={Device}
-      ItemComponent={({ data }) => <DeviceItem data={data as Device} />} // Ensure correct type casting
       linkItem={(device) => `/devices/${device.id}`}
     />
   )
