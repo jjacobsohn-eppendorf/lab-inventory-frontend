@@ -1,6 +1,9 @@
 Lab Inventory UI
 ================
 
+> [!WARNING]
+> This project has been replaced by [a newer version](https://github.com/jjacobsohn-eppendorf/lit-lab-inventory-tracker), but is being kept for reference.
+
 This is a small project to display a list of lab devices. Data is fetched from a [backend service](https://github.com/jjacobsohn-eppendorf/lab-inventory-backend)
 
 
